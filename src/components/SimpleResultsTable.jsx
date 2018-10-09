@@ -64,6 +64,9 @@ function TableBodyInternal(props) {
 }
 
 class SimpleResultsTable extends React.Component {
+  constructor(props) {
+    super(props);
+  }
   render() {
     const { socrataData } = this.props;
     return <TableBodyInternal socrataData={socrataData} />;

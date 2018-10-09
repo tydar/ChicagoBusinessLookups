@@ -23,8 +23,8 @@ class App extends Component {
 
   render() {
     const { submitted, licenseNumber } = this.state;
-    const queryString = "license_number=" + (licenseNumber + "");
-    let TableComponent = submitted ? withSocrataQuery(SimpleResultsTable, queryString) : null;
+    const queryObject = {"license_number": licenseNumber};
+    let TableComponent = submitted ? withSocrataQuery(SimpleResultsTable, queryObject) : null;
     return (
       <div className="App">
         <header className="App-header">
