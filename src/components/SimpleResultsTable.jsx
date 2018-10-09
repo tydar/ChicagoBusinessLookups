@@ -68,6 +68,7 @@ function TableBodyInternal(props) {
             page={page}
             onChangePage={onChangePage}
             onChangeRowsPerPage={onChangeRowsPerPage}
+            labelDisplayedRows={({from, to, count}) => `${from}-${from + rowsPerPage}`}
           />
         </TableRow>
       </TableFooter>
