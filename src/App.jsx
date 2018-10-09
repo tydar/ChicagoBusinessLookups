@@ -1,9 +1,31 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import LicenseNumberForm from './components/LicenseNumberForm';
 import withSocrataQuery from './components/withSocrataQuery';
 import SimpleResultsTable from './components/SimpleResultsTable';
-import './App.css';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Paper from '@material-ui/core/Paper';
+import { MuiThemeProvider, withStyles } from '@material-ui/core/styles';
+import theme from './utils/theme';
+
+const styles = {
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: '100vh',
+  },
+  grow: {
+    flexGrow: 1,
+  },
+};
 
 class App extends Component {
   constructor(props) {
@@ -23,17 +45,30 @@ class App extends Component {
 
   render() {
     const { submitted, licenseNumber } = this.state;
+    const { classes } = this.props;
     const queryObject = {"license_number": licenseNumber};
     let TableComponent = submitted ? withSocrataQuery(SimpleResultsTable, queryObject) : null;
     return (
-      <div className="App">
-        <header className="App-header">
-          <LicenseNumberForm handleSubmit={this.handleSubmit} />
-          {submitted ? <TableComponent /> : null}
-        </header>
-      </div>
+      <MuiThemeProvider theme={theme}>
+        <CssBaseline />
+        <div className={classes.root}>
+          <div className={classes.grow}>
+            <AppBar position="static">
+              <Toolbar>
+                <Typography variant="title" color="inherit" className={classes.grow}>
+                  Chicago Business Search
+                </Typography>
+              </Toolbar>
+            </AppBar>
+          </div>
+          <Paper className={classes.container}>
+            <LicenseNumberForm handleSubmit={this.handleSubmit} />
+            {submitted ? <TableComponent /> : null}
+          </Paper>
+        </div>
+      </MuiThemeProvider>
     );
   }
 }
 
-export default App;
+export default withStyles(styles)(App);
