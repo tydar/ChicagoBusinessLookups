@@ -5,6 +5,8 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import TableFooter from '@material-ui/core/TableFooter';
+import TablePagination from '@material-ui/core/TablePagination';
 
 // This component consumes a JSON Socrata response from the City of Chicago business license database
 // and produces a paginated table of license results showing just number, legal name, dba name, and expiration date.
@@ -32,7 +34,7 @@ function TableHeadInternal(props){
 }
 
 function TableBodyInternal(props) {
-  const { socrataData } = props;
+  const { socrataData, page, rowsPerPage, onChangePage, onChangeRowsPerPage } = props;
   if(socrataData == null) {
     return null;
   }
@@ -59,6 +61,16 @@ function TableBodyInternal(props) {
           );
         })}
       </TableBody>
+      <TableFooter>
+        <TableRow>
+          <TablePagination
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onChangePage={onChangePage}
+            onChangeRowsPerPage={onChangeRowsPerPage}
+          />
+        </TableRow>
+      </TableFooter>
     </Table>
   );
 }
@@ -66,10 +78,29 @@ function TableBodyInternal(props) {
 class SimpleResultsTable extends React.Component {
   constructor(props) {
     super(props);
+    this.onChangePage = this.onChangePage.bind(this);
+    this.onChangeRowsPerPage = this.onChangeRowsPerPage.bind(this);
   }
+
+  onChangePage(event, page) {
+    event.preventDefault();
+    this.props.setPage(page);
+  }
+
+  onChangeRowsPerPage(event) {
+    event.preventDefault();
+    this.props.setPageSize(event.target.value);
+  }
+
   render() {
-    const { socrataData } = this.props;
-    return <TableBodyInternal socrataData={socrataData} />;
+    const { socrataData, page, pageSize } = this.props;
+    return <TableBodyInternal
+      socrataData={socrataData}  
+      onChangePage={this.onChangePage}
+      onChangeRowsPerPage={this.onChangeRowsPerPage}
+      page={page}
+      rowsPerPage={pageSize}
+    />;
   }
 }
 
