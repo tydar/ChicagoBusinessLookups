@@ -20,7 +20,6 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
     minHeight: '100vh',
   },
   grow: {
