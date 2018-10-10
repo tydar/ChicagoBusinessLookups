@@ -3,22 +3,44 @@ import React from 'react';
 // Returns a new component that passes down queried socrata data
 // from the Chiago business license dataset
 //
-// queryObject - flat key-value object that describes the query string
+// queryObject - object that describes the query string
 // pageSize - objects per page
 // offset - how many objects to get (i.e. how many pages in are we, a multiple of pageSize)
 
-function withSocrataQuery(WrappedComponent, queryObject, pageSize = 5, offset = 0) {
-  let queryString = "";
-  Object.keys(queryObject).map(key => {
-    const value = queryObject[key];
-    if(value != "" && value != null) {
-      queryString = queryString + key + "=" + value + "&";
-    }
-  });
+// queryObject structure --
+// {
+//  key: name of socrata field
+//  operatorArity: prefix, infix, or function notation
+//  operator: =, like, etc
+//  type: text, number, etc
+//  value: value of key
+// }
 
-  queryString = queryString + "$limit=" + pageSize + "&";
-  queryString = queryString + "$offset=" + offset;
+function withSocrataQuery(WrappedComponent, queryObjectList, pageSize = 5, offset = 0) {
+  function buildQueryString(queryObjectList, pageSize, offset) {
+    let queryString = "$limit=" + pageSize + "&$offset=" + offset + "&$where=";
+    queryObjectList.map((query, index) => {
+      if(query.value != null && query.value != ''){
+        if(index != 0) {
+          queryString = queryString + ' OR ';
+        }
+        let value = query.value;
+        let key = query.key;
+        if(query.type == 'text') {
+          key = 'UPPER(' + query.key + ')';
+          value = "'%" + query.value.toUpperCase() + "%'";
+        }
+        if(query.operatorArity == 'infix') {
+          queryString = queryString + key + ' ' + query.operator + ' ' + value;
+        } else if(query.operatorArity == 'function') {
+          queryString = queryString + query.operator + ' ' + key + ', ' + value + ')';
+        }
+      } 
+    });
+    return queryString;
+  }
 
+  let queryString = buildQueryString(queryObjectList, pageSize, offset);
   const queryURI = encodeURI(queryString);
 
   return class extends React.Component {
@@ -37,18 +59,10 @@ function withSocrataQuery(WrappedComponent, queryObject, pageSize = 5, offset = 
 
     buildQueryURI(pageSize, page) {
       const offset = page * pageSize;
-      let queryString = "";
-      Object.keys(queryObject).map(key => {
-        const value = queryObject[key];
-        if(value != "" && value != null) {
-          queryString = queryString + key + "=" + value + "&";
-        }
-      });
-
-      queryString = queryString + "$limit=" + pageSize + "&";
-      queryString = queryString + "$offset=" + offset;
+      const queryString = buildQueryString(queryObjectList, pageSize, offset);
 
       const queryURI = encodeURI(queryString);
+
       return queryURI;
     }
 
@@ -68,7 +82,8 @@ function withSocrataQuery(WrappedComponent, queryObject, pageSize = 5, offset = 
 
     componentDidMount() {
       const resourceString = "https://data.cityofchicago.org/resource/xqx5-8hwx.json?$$app_token=7wM9LP6DnrCm11OI0KnTGl75T&$order=:id&";
-      fetch(resourceString + queryURI)
+      console.log(resourceString + queryURI);
+      fetch(resourceString + queryURI) //this is the queryURI we built at the beginning of the function
         .then(res => res.json())
         .then( (result) => {
           this.setState({

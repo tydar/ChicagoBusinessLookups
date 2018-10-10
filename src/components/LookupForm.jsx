@@ -68,11 +68,11 @@ class LookupForm extends React.Component {
     const { handleSubmit } = this.props;
     const { businessName, zipCode } = this.state;
     event.preventDefault();
-    handleSubmit({
-      legal_name: businessName,
-      doing_business_as_name: businessName,
-      zip_code: zipCode,
-    });
+    handleSubmit([
+      { key: 'legal_name', value: businessName, operatorArity: 'infix', operator: 'like', type: 'text'  },
+      { key: 'doing_business_as_name', value: businessName, operatorArity: 'infix', operator: 'like', type: 'text'  },
+      { key: 'zip_code', value: zipCode, operatorArity: 'infix', operator: '=', type: 'number' },
+    ]);
   }
 
   render() {

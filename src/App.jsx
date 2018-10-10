@@ -33,7 +33,7 @@ class App extends Component {
     super(props);
     this.state = {
       submitted: false,
-      query: {},
+      query: [],
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
