@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import LicenseNumberForm from './components/LicenseNumberForm';
 import LookupForm from './components/LookupForm';
 import withSocrataQuery from './components/withSocrataQuery';
 import SimpleResultsTable from './components/SimpleResultsTable';
@@ -9,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Paper from '@material-ui/core/Paper';
 import { MuiThemeProvider, withStyles } from '@material-ui/core/styles';
+import { Helmet } from 'react-helmet';
 import theme from './utils/theme';
 
 const styles = {
@@ -52,6 +52,9 @@ class App extends Component {
     return (
       <MuiThemeProvider theme={theme}>
         <CssBaseline />
+        <Helmet>
+          <title>Chicago Business Lookup</title>
+        </Helmet>
         <div className={classes.root}>
           <div className={classes.grow}>
             <AppBar position="static">
