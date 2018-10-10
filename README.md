@@ -9,3 +9,5 @@ Planned features:
 * Generate maps
 * Generate other visualizations
 * Register for email alerts for expiring licenses
+
+Live version at [tydar.github.io/ChicagoBusinessLookups].
