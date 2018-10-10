@@ -46,7 +46,7 @@ class App extends Component {
   }
 
   render() {
-    const { submitted, licenseNumber, query } = this.state;
+    const { submitted, query } = this.state;
     const { classes } = this.props;
     let TableComponent = submitted ? withSocrataQuery(SimpleResultsTable, query) : null;
     return (
