@@ -10,4 +10,4 @@ Planned features:
 * Generate other visualizations
 * Register for email alerts for expiring licenses
 
-Live version at [tydar.github.io/ChicagoBusinessLookups].
+Live version at [tydar.github.io/ChicagoBusinessLookups](http://tydar.github.io/ChicagoBusinessLookups).
