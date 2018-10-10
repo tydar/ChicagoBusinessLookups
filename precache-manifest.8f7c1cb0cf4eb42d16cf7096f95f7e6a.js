@@ -4,19 +4,19 @@ self.__precacheManifest = [
     "url": "/ChicagoBusinessLookups/static/js/runtime~main.7d646f7d.js"
   },
   {
-    "revision": "25e68c8348eda01e262e",
-    "url": "/ChicagoBusinessLookups/static/js/main.25e68c83.chunk.js"
+    "revision": "06976aa7128f70bed083",
+    "url": "/ChicagoBusinessLookups/static/js/main.06976aa7.chunk.js"
   },
   {
     "revision": "fbbfde255f0f6e25be21",
     "url": "/ChicagoBusinessLookups/static/js/1.fbbfde25.chunk.js"
   },
   {
-    "revision": "25e68c8348eda01e262e",
+    "revision": "06976aa7128f70bed083",
     "url": "/ChicagoBusinessLookups/static/css/main.2e99f9db.chunk.css"
   },
   {
-    "revision": "435a9ec3c0497cca13ed739590f8a8eb",
+    "revision": "f623b3d1bcb99694fa1d498112541f12",
     "url": "/ChicagoBusinessLookups/index.html"
   }
 ];
