@@ -53,9 +53,12 @@ class LicenseNumberForm extends React.Component {
 
   submitLocal(event) {
     const { handleSubmit } = this.props;
+    const { licenseNumber } = this.state;
     event.preventDefault();
     if(this.state.licenseNumber != '') {
-        handleSubmit(this.state.licenseNumber);
+      handleSubmit({
+        license_number: licenseNumber,
+      });
     }
   }
 

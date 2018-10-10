@@ -11,7 +11,9 @@ function withSocrataQuery(WrappedComponent, queryObject, pageSize = 5, offset = 
   let queryString = "";
   Object.keys(queryObject).map(key => {
     const value = queryObject[key];
-    queryString = queryString + key + "=" + value + "&";
+    if(value != "" && value != null) {
+      queryString = queryString + key + "=" + value + "&";
+    }
   });
 
   queryString = queryString + "$limit=" + pageSize + "&";
@@ -38,7 +40,9 @@ function withSocrataQuery(WrappedComponent, queryObject, pageSize = 5, offset = 
       let queryString = "";
       Object.keys(queryObject).map(key => {
         const value = queryObject[key];
-        queryString = queryString + key + "=" + value + "&";
+        if(value != "" && value != null) {
+          queryString = queryString + key + "=" + value + "&";
+        }
       });
 
       queryString = queryString + "$limit=" + pageSize + "&";

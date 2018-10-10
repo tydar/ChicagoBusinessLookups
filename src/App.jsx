@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import LicenseNumberForm from './components/LicenseNumberForm';
+import LookupForm from './components/LookupForm';
 import withSocrataQuery from './components/withSocrataQuery';
 import SimpleResultsTable from './components/SimpleResultsTable';
 import AppBar from '@material-ui/core/AppBar';
@@ -32,22 +33,22 @@ class App extends Component {
     super(props);
     this.state = {
       submitted: false,
+      query: {},
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSubmit(licenseNumber) {
+  handleSubmit(query) {
     this.setState({
-      licenseNumber,
+      query,
       submitted: true
     });
   }
 
   render() {
-    const { submitted, licenseNumber } = this.state;
+    const { submitted, licenseNumber, query } = this.state;
     const { classes } = this.props;
-    const queryObject = {"license_number": licenseNumber};
-    let TableComponent = submitted ? withSocrataQuery(SimpleResultsTable, queryObject) : null;
+    let TableComponent = submitted ? withSocrataQuery(SimpleResultsTable, query) : null;
     return (
       <MuiThemeProvider theme={theme}>
         <CssBaseline />
@@ -62,7 +63,7 @@ class App extends Component {
             </AppBar>
           </div>
           <Paper className={classes.container}>
-            <LicenseNumberForm handleSubmit={this.handleSubmit} />
+            <LookupForm handleSubmit={this.handleSubmit} />
             {submitted ? <TableComponent /> : null}
           </Paper>
         </div>
