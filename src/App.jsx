@@ -11,7 +11,7 @@ import { MuiThemeProvider, withStyles } from '@material-ui/core/styles';
 import { Helmet } from 'react-helmet';
 import theme from './utils/theme';
 
-const styles = {
+const styles = (theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
@@ -21,11 +21,18 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     minHeight: '100vh',
+    width: '75%',
+    alignSelf: 'center',
   },
   grow: {
     flexGrow: 1,
   },
-};
+  text: {
+    alignSelf: 'start',
+    marginTop: theme.spacing.unit,
+    marginLeft: theme.spacing.unit,
+  },
+});
 
 class App extends Component {
   constructor(props) {
@@ -64,9 +71,18 @@ class App extends Component {
               </Toolbar>
             </AppBar>
           </div>
-          <Paper className={classes.container}>
-            <LookupForm handleSubmit={this.handleSubmit} />
-            {submitted ? <TableComponent /> : null}
+          <Paper className={classes.root}>
+            <div className={classes.container}>
+              <Typography variant="subheading" color="inherit" className={classes.text}>
+                Quick, dead-simple business lookups using City of Chicago data
+              </Typography>
+              <Typography variant="body 2" color="inherit" className={classes.text}>
+                Use this tool to look up the status of business licenses based on their legal or DBA name or zip code. Coming soon: more advanced filtering
+                and the ability to lookup by multiple criteria at once.
+              </Typography>
+              <LookupForm handleSubmit={this.handleSubmit} />
+              {submitted ? <TableComponent /> : null}
+            </div>
           </Paper>
         </div>
       </MuiThemeProvider>
