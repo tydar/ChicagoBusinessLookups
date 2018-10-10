@@ -10,31 +10,41 @@ import React from 'react';
 // queryObject structure --
 // {
 //  key: name of socrata field
-//  operatorArity: prefix, infix, or function notation
+//  operatorArity: infix or function
 //  operator: =, like, etc
 //  type: text, number, etc
 //  value: value of key
 // }
+//
+//
+// BIG OL' TODO: create a plan to develop some utility functions to build query strings more robustly &
+// with more seperation of concerns.
 
 function withSocrataQuery(WrappedComponent, queryObjectList, pageSize = 5, offset = 0) {
   function buildQueryString(queryObjectList, pageSize, offset) {
     let queryString = "$limit=" + pageSize + "&$offset=" + offset + "&$where=";
+    let criteriaCount = 0;
     queryObjectList.map((query, index) => {
-      if(query.value != null && query.value != ''){
-        if(index != 0) {
+      if(query.value !== null && query.value !== ''){
+        if(index !== 0 && criteriaCount > 0) {
           queryString = queryString + ' OR ';
         }
         let value = query.value;
         let key = query.key;
-        if(query.type == 'text') {
+        if(query.type === 'text') {
           key = 'UPPER(' + query.key + ')';
           value = "'%" + query.value.toUpperCase() + "%'";
+        } else {
+          value = "'" + query.value + "'";
         }
-        if(query.operatorArity == 'infix') {
+        if(query.operatorArity === 'infixWord') {
           queryString = queryString + key + ' ' + query.operator + ' ' + value;
-        } else if(query.operatorArity == 'function') {
+        } else if(query.operatorArity === 'function') {
           queryString = queryString + query.operator + ' ' + key + ', ' + value + ')';
+        } else if(query.operatorArity === 'infix') {
+          queryString = queryString + key + query.operator + value;
         }
+        criteriaCount++;
       } 
     });
     return queryString;
@@ -81,7 +91,7 @@ function withSocrataQuery(WrappedComponent, queryObjectList, pageSize = 5, offse
     }
 
     componentDidMount() {
-      const resourceString = "https://data.cityofchicago.org/resource/xqx5-8hwx.json?$$app_token=7wM9LP6DnrCm11OI0KnTGl75T&$order=:id&";
+      const resourceString = "https://data.cityofchicago.org/resource/xqx5-8hwx.json?$$app_token=7wM9LP6DnrCm11OI0KnTGl75T&$order=expiration_date DESC&";
       console.log(resourceString + queryURI);
       fetch(resourceString + queryURI) //this is the queryURI we built at the beginning of the function
         .then(res => res.json())
@@ -99,7 +109,7 @@ function withSocrataQuery(WrappedComponent, queryObjectList, pageSize = 5, offse
     componentDidUpdate() {
       const { pageSize, page } = this.state;
       if(this.state.pageChange === true) {
-        const resourceString = "https://data.cityofchicago.org/resource/xqx5-8hwx.json?$$app_token=7wM9LP6DnrCm11OI0KnTGl75T&$order=:id&";
+        const resourceString = "https://data.cityofchicago.org/resource/xqx5-8hwx.json?$$app_token=7wM9LP6DnrCm11OI0KnTGl75T&$order=expiration_date DESC&";
         fetch(resourceString + this.buildQueryURI(pageSize, page))
           .then(res => res.json())
           .then( (result) => {
