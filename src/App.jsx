@@ -75,7 +75,7 @@ class App extends Component {
               <Typography variant="subheading" color="inherit" className={classes.text}>
                 Quick, dead-simple business lookups using City of Chicago data
               </Typography>
-              <Typography variant="body 2" color="inherit" className={classes.text}>
+              <Typography variant="body2" color="inherit" className={classes.text}>
                 Use this tool to look up the status of business licenses based on their legal or DBA name or zip code. Coming soon: more advanced filtering
                 and the ability to lookup by multiple criteria at once.
               </Typography>
