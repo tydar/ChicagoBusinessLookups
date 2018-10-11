@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.2/workbox-sw.js");
 
 importScripts(
-  "/ChicagoBusinessLookups/precache-manifest.8e74b5940a4ce8261104c31800d0ff31.js"
+  "/ChicagoBusinessLookups/precache-manifest.2bd1c51746fda7c4c54056ed14b75a71.js"
 );
 
 workbox.clientsClaim();
