@@ -12,6 +12,17 @@ import Paper from '@material-ui/core/Paper';
 // This component consumes a JSON Socrata response from the City of Chicago business license database
 // and produces a paginated table of license results showing just number, legal name, dba name, and expiration date.
 
+const styles = theme => ({
+  tableWrapper: {
+    overflowX: "auto",
+    marginTop: theme.spacing.unit * 3,
+    width: '100%',
+  },
+  table: {
+    minWidth: 700,
+  }
+});
+
 function TableHeadInternal(props){
   const columns = [
     { id: 'dba_name', numeric: false, label: 'Doing Business As'  },
@@ -35,12 +46,12 @@ function TableHeadInternal(props){
 }
 
 function TableBodyInternal(props) {
-  const { socrataData, page, rowsPerPage, onChangePage, onChangeRowsPerPage } = props;
+  const { socrataData, page, rowsPerPage, onChangePage, onChangeRowsPerPage, className } = props;
   if(socrataData == null) {
     return null;
   }
   return (
-    <Table>
+    <Table className={className}>
       <TableHeadInternal />
       <TableBody>
         {socrataData.map(datum => {
@@ -99,18 +110,19 @@ class SimpleResultsTable extends React.Component {
   }
 
   render() {
-    const { socrataData, page, pageSize } = this.props;
+    const { socrataData, page, pageSize, classes } = this.props;
     return (
-      <Paper>
+      <Paper className={classes.tableWrapper}>
         <TableBodyInternal
           socrataData={socrataData}  
           onChangePage={this.onChangePage}
           onChangeRowsPerPage={this.onChangeRowsPerPage}
           page={page}
           rowsPerPage={pageSize}
+          className={classes.table}
         />
       </Paper>);
   }
 }
 
-export default SimpleResultsTable;
+export default withStyles(styles)(SimpleResultsTable);

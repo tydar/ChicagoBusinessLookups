@@ -15,13 +15,12 @@ const styles = (theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
+    minHeight: '100vh',
   },
   container: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    minHeight: '100vh',
-    width: '75%',
     alignSelf: 'center',
   },
   grow: {
@@ -81,8 +80,8 @@ class App extends Component {
                 and the ability to lookup by multiple criteria at once.
               </Typography>
               <LookupForm handleSubmit={this.handleSubmit} />
-              {submitted ? <TableComponent /> : null}
             </div>
+            {submitted ? <TableComponent /> : null}
           </Paper>
         </div>
       </MuiThemeProvider>
