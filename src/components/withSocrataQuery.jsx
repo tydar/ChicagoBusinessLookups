@@ -3,50 +3,34 @@ import React from 'react';
 // Returns a new component that passes down queried socrata data
 // from the Chiago business license dataset
 //
-// queryObject - object that describes the query string
+// queryObject - object that contains our query parameters
 // pageSize - objects per page
 // offset - how many objects to get (i.e. how many pages in are we, a multiple of pageSize)
+//
+// I decided to just build queries based on what fields I know the form has
+// instead of rolling Socrata access API or using 'soda-js' which has dependencies with security
+// vulnerabilities.
 
-// queryObject structure --
-// {
-//  key: name of socrata field
-//  operatorArity: infix or function
-//  operator: =, like, etc
-//  type: text, number, etc
-//  value: value of key
-// }
-//
-//
-// BIG OL' TODO: create a plan to develop some utility functions to build query strings more robustly &
-// with more seperation of concerns.
 
 function withSocrataQuery(WrappedComponent, queryObjectList, pageSize = 5, offset = 0) {
-  function buildQueryString(queryObjectList, pageSize, offset) {
+  function buildQueryString(queryObject, pageSize, offset) {
     let queryString = "$limit=" + pageSize + "&$offset=" + offset + "&$where=";
-    let criteriaCount = 0;
-    queryObjectList.map((query, index) => {
-      if(query.value !== null && query.value !== ''){
-        if(index !== 0 && criteriaCount > 0) {
-          queryString = queryString + ' OR ';
-        }
-        let value = query.value;
-        let key = query.key;
-        if(query.type === 'text') {
-          key = 'UPPER(' + query.key + ')';
-          value = "'%" + query.value.toUpperCase() + "%'";
-        } else {
-          value = "'" + query.value + "'";
-        }
-        if(query.operatorArity === 'infixWord') {
-          queryString = queryString + key + ' ' + query.operator + ' ' + value;
-        } else if(query.operatorArity === 'function') {
-          queryString = queryString + query.operator + ' ' + key + ', ' + value + ')';
-        } else if(query.operatorArity === 'infix') {
-          queryString = queryString + key + query.operator + value;
-        }
-        criteriaCount++;
-      } 
-    });
+    let {zipCode, dbaName, legalName} = queryObject;
+    const zipFlag = (zipCode !== null && zipCode !== '') ?
+      true : false;
+    const nameFlag = (dbaName !== null && dbaName !== '') ?
+      true : false;
+    if(zipFlag) {
+      queryString = queryString + `zip_code='${zipCode}'`;
+      queryString = nameFlag ? queryString + ' AND (' : queryString;
+    }
+    if(nameFlag){
+      dbaName = dbaName.toUpperCase();
+      legalName = legalName.toUpperCase();
+      queryString = queryString + `UPPER(doing_business_as_name) like '%${dbaName}%' OR `;
+      queryString = queryString + `UPPER(legal_name) like '%${legalName}%'`;
+      queryString = zipFlag ? queryString + ')' : queryString;
+    }
     return queryString;
   }
 
