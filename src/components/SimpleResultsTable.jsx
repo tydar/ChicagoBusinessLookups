@@ -16,7 +16,8 @@ const styles = theme => ({
   tableWrapper: {
     overflowX: "auto",
     marginTop: theme.spacing.unit * 3,
-    width: '100%',
+    width: '75%',
+    alignSelf: 'center',
   },
   table: {
     minWidth: 700,
