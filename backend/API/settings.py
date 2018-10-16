@@ -25,7 +25,7 @@ SECRET_KEY = '+fvi9@&nho^8mq3l+8w1@@xty3g51nu--l8e#w$67%yfejk=)2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['drnll.com']
 
 
 # Application definition
@@ -38,7 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'API.businesslicenses',
+    'graphene_django',
 ]
+
+GRAPHENE = {
+        'SCHEMA': 'API.schema.schema'
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
