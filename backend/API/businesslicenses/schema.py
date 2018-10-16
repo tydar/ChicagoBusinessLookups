@@ -1,14 +1,20 @@
-import graphene
+from graphene import relay, ObjectType
+from graphene_django import DjangoObjectType
+from graphene_django.filter import DjangoFilterConnectionField
 
-from graphene_django.types import DjangoObjectType
 from .models import BusinessLicense
 
-class BusinessLicenseType(DjangoObjectType):
+class LicenseNode(DjangoObjectType):
     class Meta:
         model = BusinessLicense
+        filter_fields = {
+                'dba_name': ['exact', 'icontains'],
+                'legal_name': ['exact', 'icontains'],
+                'license_number': ['exact'],
+                'zip_code': ['exact'],
+        }
+        interfaces = (relay.Node, )
 
 class Query(object):
-    all_licenses = graphene.List(BusinessLicenseType)
-
-    def resolve_all_licenses(self, info, **kwargs):
-        return BusinessLicense.objects.all()
+    all_licenses = DjangoFilterConnectionField(LicenseNode)
+    license = relay.Node.Field(LicenseNode)
