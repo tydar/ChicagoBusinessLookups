@@ -13,7 +13,10 @@ import { MuiThemeProvider, withStyles } from '@material-ui/core/styles';
 import { Helmet } from 'react-helmet';
 import theme from './utils/theme';
 
-import { ApolloProvider } from 'react-apollo';
+import { ApolloProvider, Query } from 'react-apollo';
+import gql from 'graphql-tag';
+
+import { withCookies } from 'react-cookie';
 
 const styles = (theme) => ({
   root: {
@@ -37,6 +40,43 @@ const styles = (theme) => ({
   },
 });
 
+const testQuery = gql`
+query {
+    allLicenses(dbaName_Icontains: "cecina") {
+        edges {
+            node {
+                dbaName
+                zipCode
+            }
+        }
+    }
+}
+`;
+
+const TestComponent = ({ cookies }) => {
+  return (
+    <Query 
+      query={testQuery}
+      context={{
+        headers: {
+          'X-CSRFToken': cookies.get('csrftoken'),
+        }
+      }}
+    >
+      {({ loading, error, data }) => {
+        if (loading) return <p> Loading... </p>;
+        if (error) return <p> Error... </p>;
+
+        return data.allLicenses.edges.map(({node: { dbaName, zipCode }}) => (
+          <div key={dbaName}>
+            <p>{`${dbaName}: ${zipCode}`}</p>
+          </div>
+        ));
+      }}
+    </Query>
+  );
+}
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -58,6 +98,7 @@ class App extends Component {
     const { submitted, query } = this.state;
     const { classes, client } = this.props;
     let TableComponent = submitted ? withSocrataQuery(SimpleResultsTable, query) : null;
+    let CookiedComponent = withCookies(TestComponent);
     return (
       <ApolloProvider client={client}>
         <MuiThemeProvider theme={theme}>
@@ -87,6 +128,7 @@ class App extends Component {
                 <LookupForm handleSubmit={this.handleSubmit} />
               </div>
               {submitted ? <TableComponent /> : null}
+              <CookiedComponent />
             </Paper>
           </div>
         </MuiThemeProvider>

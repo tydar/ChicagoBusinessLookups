@@ -25,8 +25,7 @@ SECRET_KEY = '+fvi9@&nho^8mq3l+8w1@@xty3g51nu--l8e#w$67%yfejk=)2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['drnll.com']
-
+ALLOWED_HOSTS = ['drnll.com', 'localhost']
 
 # Application definition
 
@@ -39,7 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'API.businesslicenses',
     'graphene_django',
+    'corsheaders',
 ]
+
+CORS_ORIGIN_WHITELIST = ('drnll.com:3000',)
 
 GRAPHENE = {
         'SCHEMA': 'API.schema.schema'
